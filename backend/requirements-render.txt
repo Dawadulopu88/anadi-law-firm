@@ -1,0 +1,4 @@
+-r requirements-common.txt
+waitress==3.0.2
+psycopg2-binary==2.9.13
+whitenoise==6.12.0

@@ -1,0 +1,33 @@
+# Temporary demonstration only; both plans are explicitly free.
+services:
+  - type: web
+    name: anadi-law-firm-backend
+    runtime: python
+    rootDir: backend
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements-render.txt && python manage.py collectstatic --noinput
+    startCommand: python scripts/render_start.py
+    healthCheckPath: /api/courses/
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.render
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: anadi-demo-db
+          property: connectionString
+      - key: DEMO_ADMIN_USERNAME
+        value: demo_admin
+      - key: DEMO_ADMIN_PASSWORD
+        sync: false
+      - key: PRODUCTION_CORS_ALLOWED_ORIGINS
+        sync: false
+databases:
+  - name: anadi-demo-db
+    plan: free
+    databaseName: anadi_demo
+    user: anadi_demo_user

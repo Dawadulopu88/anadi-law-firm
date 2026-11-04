@@ -1,0 +1,29 @@
+# Template for a Linux Nginx HTTPS proxy on the SAME host as Waitress.
+# Replace domain, certificates and filesystem roots before use.
+server {
+    listen 80;
+    server_name api.your-company.example;
+    return 301 https://api.your-company.example$request_uri;
+}
+server {
+    listen 443 ssl;
+    server_name api.your-company.example;
+    ssl_certificate /etc/ssl/anadi/fullchain.pem;
+    ssl_certificate_key /etc/ssl/anadi/privkey.pem;
+    client_max_body_size 12m;
+    # Avoid retaining bearer-style tracking codes in web access logs.
+    access_log off;
+    location /static/ { alias /srv/anadi-data/staticfiles/; }
+    location /media/ {
+        alias /srv/anadi-data/public_media/;
+        add_header X-Content-Type-Options nosniff always;
+    }
+    location /private_media/ { return 404; }
+    location / {
+        proxy_set_header Host $host;
+        # Overwrite rather than append untrusted client-provided forwarding data.
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://127.0.0.1:8001;
+    }
+}

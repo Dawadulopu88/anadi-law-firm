@@ -1,0 +1,28 @@
+# Secrets and local config
+.env
+.local/
+.env.*
+!.env.example
+
+# Virtual environment
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Uploaded files (private, never commit)
+media/
+private_media/
+staticfiles/
+
+# Editor and OS
+.vscode/
+.DS_Store
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+db.sqlite3
